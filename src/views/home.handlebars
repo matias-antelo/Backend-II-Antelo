@@ -1,18 +1,62 @@
-<main>
-  <div style="text-align: center;">
-    <img src="/LOGO.png" alt="Logo del laboratorio" width="20%">
+<!-- filtros -->
+<div style="display:flex; justify-content:center; margin-bottom:20px;">
+  <form action="/api/sessions" method="GET" class="filters"
+    style="display:flex; gap:15px; align-items:center; flex-wrap:wrap; justify-content:center;">
+    <label>Categoría:</label>
+    <input type="text" name="query" value="{{currentQuery}}" placeholder="heladeras, microondas, tostadora, lavarropas" />
+
+    <label>Ordenar:</label>
+    <select name="sort">
+      <option value="">Sin orden</option>
+      <option value="asc" {{#if (eq currentSort "asc" )}}selected{{/if}}>Menor a mayor precio</option>
+      <option value="desc" {{#if (eq currentSort "desc" )}}selected{{/if}}>Mayor a menor precio</option>
+    </select>
+
+    <label>Límite:</label>
+    <select name="limit">
+      <option value="5" {{#if (eq currentLimit 5)}}selected{{/if}}>5</option>
+      <option value="10" {{#if (eq currentLimit 10)}}selected{{/if}}>10</option>
+      <option value="20" {{#if (eq currentLimit 20)}}selected{{/if}}>20</option>
+    </select>
+
+    <button type="submit">Aplicar filtros</button>
+
+  </form>
+</div>
+
+<!-- PRODUCTOS -->
+
+{{#each products}}
+<div class="grilla">
+  <div class="grilla-izquierda">
+    <img src="/producto.png" alt="Imagen producto" class="imagen-producto">
   </div>
-  <div class="login-formulario">
-    <div>
-      <label for="usuario">Usuario</label>
-      <input type="text" id="usuario" required>
-    </div>
-    <div>
-      <label for="contrasena">Contraseña</label>
-      <input type="password" id="contrasena" required>
-    </div>
-    <div class="opciones">
-      <button id="btn-login">Iniciar Sesión</button>
-    </div>
+  <div class="separador"></div>
+  <div class="contenido">
+
+    <p><strong>{{this.title}}</p>
+    <p><b>Precio:</b> {{this.price}}</p>
+
+    {{#if this.available}}
+    <p style="color: green ">Disponible</p>
+    {{else}}
+    <p style="color: red">Sin stock</p>
+    {{/if}}
+    <button class="btn-agregar" data-id="{{this._id}}">Agregar al carrito</button>
   </div>
-</main>
+</div>
+{{/each}}
+
+<!-- paginacion -->
+<div class="paginacion">
+  {{#each pages}}
+    <a 
+      href="{{this.link}}" 
+      class="pagina {{#if this.active}}activa{{/if}}"
+    >
+      {{this.number}}
+    </a>
+  {{/each}}
+</div>
+
+<script src="/DOM.js"></script>

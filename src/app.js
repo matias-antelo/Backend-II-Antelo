@@ -1,9 +1,13 @@
 import express from 'express';
 import path from 'path';
 import usersRouter from './routes/users.routes.js';
+import viewsRouter from './routes/views.router.js';
 import Handlebars from 'express-handlebars';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose'; 
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
+import session from 'express-session';
 
 const app = express();
 const PORT = 3000;
@@ -13,9 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //handlebars    
-app.engine("handlebars", Handlebars.engine());
+app.engine("handlebars", Handlebars.engine({helpers: {eq: (a, b) => a === b}}));
 app.set('views', path.join(process.cwd(), '/src/views'))
 app.set('view engine', 'handlebars');
+app.use(express.static("src/public"));
 app.use(express.static('src/fotos'));
 app.use('/styles', express.static(path.join(process.cwd(), 'src/views/layouts')));
 
@@ -40,8 +45,21 @@ app.get("/get-cookie", (req, res, next) => {
     res.json(req.cookies);
 });
 
+//configurar session
+app.use(session({
+    secret: 'secretCoder',
+    resave: false,
+    saveUninitialized: false
+}));
+
+//inicializar passport
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 //rutas
-app.use('/api/sessions', usersRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/sessions', viewsRouter);
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);
