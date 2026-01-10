@@ -1,23 +1,37 @@
 import { Router } from 'express';
 import usersModel from "../model/users.model.js";
-import {createHash, isValidPassword} from '../utils.js';
+import { createHash, isValidPassword } from '../utils.js';
 import passport from 'passport';
 
 const router = Router();
 
 //Ruta para crear usuarios
-/*router.post("/register", async (req, res) => {
-    try {
-        const { first_name, last_name, email, age, password, cart, role } = req.body;
-        const newUser = await usersModel.create({
-            first_name, last_name, email, age,
-            password: createHash(password), cart, role
-        });
-        res.status(201).json({ status: "ok", payload: newUser });
-    } catch (error) {
-        res.status(500).json({ status: "error", error: error.message });
+router.post("/register", (req, res, next) => {
+  passport.authenticate("register", (err, user) => {
+    if (err) {
+      return res.status(500).json({
+        status: "error",
+        message: "Error interno"
+      });
     }
-});*/
+
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "Usuario ya existe"
+      });
+    }
+
+    return res.status(201).json({
+      status: "success",
+      message: "Usuario registrado correctamente"
+    });
+  })(req, res, next);
+});
+
+router.get("/failregister", (req, res) => {
+    res.status(400).json({ status: "error", message: "Registro fallido" });
+});
 
 
 

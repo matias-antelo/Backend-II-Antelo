@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose'; 
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
-import session from 'express-session';
+import sessionsRouter from "./routes/sessions.routes.js";
 
 const app = express();
 const PORT = 3000;
@@ -45,19 +45,14 @@ app.get("/get-cookie", (req, res, next) => {
     res.json(req.cookies);
 });
 
-//configurar session
-app.use(session({
-    secret: 'secretCoder',
-    resave: false,
-    saveUninitialized: false
-}));
 
 //inicializar passport
 initializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
+
 
 //rutas
+app.use("/api/sessions", sessionsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/sessions', viewsRouter);
 

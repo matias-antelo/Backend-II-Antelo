@@ -1,24 +1,29 @@
 import { Router } from 'express';
 import productsModel from "../model/products.model.js";
+import cartsModel from '../model/carts.model.js';
+import { authJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+
+
 //Ruta de inicio de sesión
 router.get('/login', (req, res) => {
-    res.render('login', {
-        title: "LOGGIN",
-    })
+  res.render('login', {
+    title: "LOGGIN",
+  })
 });
 
-//Ruta de inicio de sesión
+//Ruta de registro usuarios
 router.get('/registration', (req, res) => {
-    res.render('registration', {
-        title: "Registro",
-    })
+  res.render('registration', {
+    title: "Registro",
+  })
 });
 
-router.get("/", async (req, res) => {
 
+//Ruta de productos con paginación, filtro y ordenamiento
+router.get("/", authJWT, async (req, res) => {
   let { limit, page, sort, query } = req.query;
 
   limit = parseInt(limit) || 10;
@@ -38,7 +43,7 @@ router.get("/", async (req, res) => {
     lean: true
   });
 
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const baseUrl = req.baseUrl;
   const pages = [];
   for (let i = 1; i <= result.totalPages; i++) {
     pages.push({
@@ -58,5 +63,26 @@ router.get("/", async (req, res) => {
     currentPage: result.page,
   });
 });
+
+//Ruta de carritos
+router.get("/carts", authJWT, async (req, res) => {
+
+  const carts = await cartsModel.find().lean();
+  const productsList = await productsModel.find().lean();
+  const defaultCart = await cartsModel
+
+    .findOne({ cartNumber: 1 })
+    .populate("products.product")
+    .lean();
+
+  res.render("carts", {
+    title: "Carrito",
+    carts,
+    products: defaultCart ? defaultCart.products : [],
+    cartNumber: 1,
+    productsList
+  });
+});
+
 
 export default router;

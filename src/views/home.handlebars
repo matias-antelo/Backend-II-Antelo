@@ -1,9 +1,18 @@
+<nav class="navbar">
+  <ul>
+    <li><a href="/api/sessions/" id="link-ingreso">Productos</a></li>
+    <li><a href="/api/sessions/carts" id="link-incubadora">Carrito</a></li>
+
+  </ul>
+</nav>
+
 <!-- filtros -->
 <div style="display:flex; justify-content:center; margin-bottom:20px;">
   <form action="/api/sessions" method="GET" class="filters"
     style="display:flex; gap:15px; align-items:center; flex-wrap:wrap; justify-content:center;">
     <label>Categoría:</label>
-    <input type="text" name="query" value="{{currentQuery}}" placeholder="heladeras, microondas, tostadora, lavarropas" />
+    <input type="text" name="query" value="{{currentQuery}}"
+      placeholder="heladeras, microondas, tostadora, lavarropas" />
 
     <label>Ordenar:</label>
     <select name="sort">
@@ -20,7 +29,7 @@
     </select>
 
     <button type="submit">Aplicar filtros</button>
-
+    <button type="button" id="logoutBtn">Logout</button>
   </form>
 </div>
 
@@ -50,13 +59,12 @@
 <!-- paginacion -->
 <div class="paginacion">
   {{#each pages}}
-    <a 
-      href="{{this.link}}" 
-      class="pagina {{#if this.active}}activa{{/if}}"
-    >
-      {{this.number}}
-    </a>
+  <a href="{{this.link}}" class="pagina {{#if this.active}}activa{{/if}}">
+    {{this.number}}
+  </a>
   {{/each}}
 </div>
 
-<script src="/DOM.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/logout.js"></script>
+<script src="/Login.js"></script>
