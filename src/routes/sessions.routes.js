@@ -29,8 +29,9 @@ router.post(
 router.get("/login-fail", (req, res) => {
   res.status(401).json({
     status: "error",
-    message: "Login incorrecto"
+     
   });
+  console.log("Error en el login")
 });
 
 router.post("/logout", (req, res) => {

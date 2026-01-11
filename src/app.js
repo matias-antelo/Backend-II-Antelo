@@ -33,19 +33,6 @@ mongoose.connect("mongodb+srv://anteloma87:Anteloma23%23@carrito-compras-cluster
 // middleware para parsear cookies
 app.use(cookieParser());
 
-//setear y ver cockies
-app.get("/set-cookie", (req, res, next) => {
-    res.cookie("nombre-cookie", "valor", {
-        maxAge: 3000, //
-    })
-        .send("Cookie seteada");
-});
-
-app.get("/get-cookie", (req, res, next) => {
-    res.json(req.cookies);
-});
-
-
 //inicializar passport
 initializePassport();
 app.use(passport.initialize());
