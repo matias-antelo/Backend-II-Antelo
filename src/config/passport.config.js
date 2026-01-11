@@ -60,25 +60,21 @@ const initializePassport = () => {
         }
     }))
 
-    passport.use(
-        "jwt",
-        new JwtStrategy({
-            jwtFromRequest: ExtractJwt.fromExtractors([req => req?.cookies?.jwt]),
-            secretOrKey: jwtSecret
-        },
-            async (jwt_payload, done) => {
-                try {
-                    const user = await usersModel.findById(jwt_payload.id);
-                    if (!user) {
-                        return done(null, false);
-                    }
-                    return done(null, user);
-                } catch (error) {
-                    return done(error, false);
+    passport.use('jwt', new JwtStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([req => req?.cookies?.jwt]),
+        secretOrKey: jwtSecret
+    },
+        async (jwt_payload, done) => {
+            try {
+                const user = await usersModel.findById(jwt_payload.id);
+                if (!user) {
+                    return done(null, false);
                 }
-            }
-        )
-    );
+                return done(null, user);
+            } catch (error) {
+                return done(error, false);
+            }}
+    ));
 };
 
 export default initializePassport;
