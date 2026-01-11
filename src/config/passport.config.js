@@ -19,7 +19,6 @@ const initializePassport = () => {
             try {
                 let user = await usersModel.findOne({ email: username });
                 if (user) {
-                    console.log("El usuario existe");
                     return done(null, false);
                 }
 
@@ -50,11 +49,9 @@ const initializePassport = () => {
         try {
             const user = await usersModel.findOne({ email: username })
             if (!user) {
-                console.log("Usuario no encontrado");
                 return done(null, false);
             }
             if (!isValidPassword(user, password)) {
-                console.log("Contraseña inválida");
                 return done(null, false);
             }
             return done(null, user);
