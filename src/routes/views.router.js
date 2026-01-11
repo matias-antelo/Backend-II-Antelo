@@ -2,20 +2,19 @@ import { Router } from 'express';
 import productsModel from "../model/products.model.js";
 import cartsModel from '../model/carts.model.js';
 import { authJWT } from "../middlewares/auth.middleware.js";
+import { redirectAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-
-
 //Ruta de inicio de sesión
-router.get('/login', (req, res) => {
+router.get('/login', redirectAuth, (req, res) => {
   res.render('login', {
     title: "LOGGIN",
   })
 });
 
 //Ruta de registro usuarios
-router.get('/registration', (req, res) => {
+router.get('/registration', redirectAuth, (req, res) => {
   res.render('registration', {
     title: "Registro",
   })
@@ -83,6 +82,5 @@ router.get("/carts", authJWT, async (req, res) => {
     productsList
   });
 });
-
 
 export default router;

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "coderSecretKey";
+const JWT_SECRET = "codigoSecreto";
 
 export const generateToken = (user) => {
   return jwt.sign(
