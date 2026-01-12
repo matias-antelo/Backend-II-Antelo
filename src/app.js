@@ -30,14 +30,12 @@ mongoose.connect("mongodb+srv://anteloma87:Anteloma23%23@carrito-compras-cluster
 .then(() => {console.log("Conectado a BBDD")})
 .catch(error => {console.error("Error al conectar a la BBDD", error)});
 
-
 // middleware para parsear cookies
 app.use(cookieParser());
 
 //inicializar passport
 initializePassport();
 app.use(passport.initialize());
-
 
 //rutas
 app.use("/api/sessions", sessionsRouter);
