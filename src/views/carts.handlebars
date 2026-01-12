@@ -6,21 +6,20 @@
     </ul>
   </nav>
 <main>
-  {{#each carts}}
+  {{#each products}}
   <div class="grilla">
     <div class="grilla-izquierda">
-      <img src="/foto/producto.png" alt="Imagen producto" class="imagen-producto">
+      <img src="/producto.png" alt="Imagen producto" class="imagen-producto">
     </div>
 
     <div class="separador"></div>
 
     <div class="contenido">
-      <p><strong>Nombre:</strong> {{this.title}}</p>
-      <p><strong>Precio:</strong> ${{this.price}}</p>
-      <p><strong>Descripción:</strong> {{this.description}}</p>
-      <p><strong>Stock:</strong> {{this.stock}}</p>
-      <p><strong>Categoría:</strong> {{this.category}}</p>
-      <button class="btn-eliminar" data-id="{{this.id}}">Eliminar del carrito</button>
+      <p><strong>Nombre:</strong> {{this.product.title}}</p>
+    <p><strong>Precio:</strong> ${{this.product.price}}</p>
+    <p><strong>Descripción:</strong> {{this.product.description}}</p>
+    <p><strong>Categoría:</strong> {{this.product.category}}</p>
+    <p><strong>Cantidad:</strong> {{this.quantity}}</p>
     </div>
   </div>
   {{/each}}

@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import sessionsRouter from "./routes/sessions.routes.js";
+import cartsRouter from "./routes/carts.routes.js";
 
 const app = express();
 const PORT = 3000;
@@ -42,6 +43,7 @@ app.use(passport.initialize());
 app.use("/api/sessions", sessionsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/sessions', viewsRouter);
+app.use("/api", cartsRouter);
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);

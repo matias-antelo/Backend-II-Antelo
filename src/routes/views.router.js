@@ -65,21 +65,14 @@ router.get("/", authJWT, async (req, res) => {
 
 //Ruta de carritos
 router.get("/carts", authJWT, async (req, res) => {
-
-  const carts = await cartsModel.find().lean();
-  const productsList = await productsModel.find().lean();
-  const defaultCart = await cartsModel
-
-    .findOne({ cartNumber: 1 })
+  const cart = await cartsModel
+    .findById(req.user.cart)
     .populate("products.product")
     .lean();
 
   res.render("carts", {
-    title: "Carrito",
-    carts,
-    products: defaultCart ? defaultCart.products : [],
-    cartNumber: 1,
-    productsList
+    title: "Mi carrito",
+    products: cart ? cart.products : []
   });
 });
 
