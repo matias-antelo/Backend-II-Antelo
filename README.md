@@ -14,7 +14,7 @@ Este proyecto implementa un servidor Node.js con Express que gestiona productos 
 │    ├── 📁 config/
 │    │   └── 📄 passport.config.js
 │    │
-│    ├── 📁 foto/    LISTO
+│    ├── 📁 foto/    
 │    │   ├── 🖼️ CODER_CURSO.png
 │    │   ├── 🖼️ LOGO.png
 │    │   └── 🖼️ producto.png
@@ -23,7 +23,7 @@ Este proyecto implementa un servidor Node.js con Express que gestiona productos 
 │    │   ├── 📄 auth.js
 │    │   └── 📄 auth.middleware.js
 │    │
-│    ├── 📁 model/  LISTO
+│    ├── 📁 model/  
 │    │   ├── 📄 carts.model.js
 │    │   ├── 📄 products.model.js
 │    │   └── 📄 users.model.js
@@ -49,7 +49,7 @@ Este proyecto implementa un servidor Node.js con Express que gestiona productos 
 │    │   ├── 📄 registration.handlebars
 │    │   └── 📄 login.handlebars
 │    │
-│    ├── 📄 app.js    LISTO
+│    ├── 📄 app.js  
 │    └── 📄 utils.js
 │
 ├── 📄 .gitignore
