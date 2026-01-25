@@ -3,17 +3,34 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", async () => {
       const productId = btn.dataset.id;
 
-      const res = await fetch(`/api/carts/products/${productId}`, {
-        method: "POST",
-        credentials: "include" // 🔐 JWT
-      });
+      if (!productId) {
+        Swal.fire("Error", "ID del producto no encontrado", "error");
+        return;
+      }
 
-      const data = await res.json();
+      try {
+        const res = await fetch(`/api/carts/products/${productId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include" // 🔐 JWT
+        });
 
-      if (res.ok) {
-        Swal.fire("Agregado", data.message, "success");
-      } else {
-        Swal.fire("Error", data.error || "Error", "error");
+        const data = await res.json();
+
+        if (res.ok) {
+          Swal.fire({
+            title: "Éxito",
+            text: data.message || "Producto agregado al carrito",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire("Error", data.message || data.error || "Error al agregar producto", "error");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire("Error", "Error de conexión con el servidor", "error");
       }
     });
   });

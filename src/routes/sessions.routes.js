@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../middlewares/auth.js";
+import usersController from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -37,21 +38,11 @@ router.post("/logout", (req, res) => {
   res.json({ status: "success" });
 });
 
-// CURRENT
+// CURRENT - Obtener usuario actual
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send({
-      status: "success",
-      user: {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        role: req.user.role
-      }
-    });
-  }
+  usersController.getCurrentUser.bind(usersController)
 );
 
 export default router;

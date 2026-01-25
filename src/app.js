@@ -1,6 +1,8 @@
 import express from 'express';
+import dotenv from "dotenv";
 import path from 'path';
 import usersRouter from './routes/users.routes.js';
+import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.router.js';
 import Handlebars from 'express-handlebars';
 import cookieParser from 'cookie-parser';
@@ -11,7 +13,7 @@ import sessionsRouter from "./routes/sessions.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 
 const app = express();
-const PORT = 3000;
+dotenv.config();
 
 //para JSON
 app.use(express.json());
@@ -26,7 +28,7 @@ app.use(express.static('src/fotos'));
 app.use('/styles', express.static(path.join(process.cwd(), 'src/views/layouts')));
 
 //conexion a la base de datos
-mongoose.connect("mongodb+srv://anteloma87:Anteloma23%23@carrito-compras-cluster.6u5aaig.mongodb.net/Backend-II")
+mongoose.connect(process.env.MONGO_URI)
 .then(() => {console.log("Conectado a BBDD")})
 .catch(error => {console.error("Error al conectar a la BBDD", error)});
 
@@ -40,9 +42,10 @@ app.use(passport.initialize());
 //rutas
 app.use("/api/sessions", sessionsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 app.use('/api/sessions', viewsRouter);
-app.use("/api", cartsRouter);
 
-app.listen(PORT, () => {
-    console.log(`Servidor escuchando en puerto ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Servidor escuchando en puerto ${process.env.PORT}`);
 });

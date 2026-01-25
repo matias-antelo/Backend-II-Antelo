@@ -1,25 +1,19 @@
 import { Router } from 'express';
-import usersModel from "../model/users.model.js";
-import { createHash, isValidPassword } from '../utils.js';
+import usersController from "../controllers/users.controller.js";
 import passport from 'passport';
 
 const router = Router();
 
-//Ruta para crear usuarios
+// Ruta para crear usuarios
 router.post("/register", (req, res, next) => {
-  passport.authenticate("register", (err, user) => {
-    if (!user) {
-      return res.status(400).json({
-        status: "error",
-        message: "Usuario ya existe"
-      });
-    }
-
-    return res.status(201).json({
-      status: "success",
-      message: "Usuario registrado correctamente"
-    });
-  })(req, res, next);
+  usersController.register(req, res, next);
 });
+
+// Ruta para obtener usuario por ID
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  usersController.getUserById.bind(usersController)
+);
 
 export default router;

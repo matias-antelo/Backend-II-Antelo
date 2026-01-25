@@ -20,7 +20,7 @@ export const redirectAuth = (req, res, next) => {
     return next();
   }
   try {
-    jwt.verify(token, jwtSecret);
+    jwt.verify(token, process.env.JWT_SECRET);
     return res.redirect("/api/sessions");
   } catch (error) {
     return next();

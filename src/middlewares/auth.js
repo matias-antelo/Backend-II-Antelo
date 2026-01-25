@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "codigoSecreto";
-
 export const generateToken = (user) => {
   return jwt.sign(
     {
@@ -9,9 +7,9 @@ export const generateToken = (user) => {
       email: user.email,
       role: user.role
     },
-    JWT_SECRET,
-    { expiresIn: "1h" }
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
   );
 };
 
-export const jwtSecret = JWT_SECRET;
+export const jwtSecret = process.env.JWT_SECRET;
