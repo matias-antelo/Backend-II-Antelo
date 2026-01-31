@@ -1,39 +1,12 @@
 import { productsDAO } from "../dao/index.js";
 
 class ProductsRepository {
-  async getProductsFromQuery(queryParams) {
-    let { limit, page, sort, query } = queryParams;
-
-    limit = parseInt(limit) || 10;
-    page = parseInt(page) || 1;
-
-    const filter = {};
-    if (query) {
-      filter.category = query;
-    }
-
-    let sortOption = undefined;
-    if (sort === "asc") sortOption = { price: 1 };
-    if (sort === "desc") sortOption = { price: -1 };
-
+  async getProducts(filter = {}, options = {}) {
     const result = await productsDAO.getAll(filter, {
-      limit,
-      page,
-      sort: sortOption,
+      ...options,
       lean: true
     });
-
-    return {
-      ...result,
-      limit,
-      page,
-      sort,
-      query
-    };
-  }
-
-  async getProductById(id) {
-    return await productsDAO.getById(id);
+    return result;
   }
 
   async createProduct(product) {
@@ -46,6 +19,10 @@ class ProductsRepository {
 
   async deleteProduct(id) {
     return await productsDAO.delete(id);
+  }
+
+  async getProductById(id) {
+    return await productsDAO.getById(id);
   }
 }
 

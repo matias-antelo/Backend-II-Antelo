@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch(`/api/carts/products/${productId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include" // 🔐 JWT
+          credentials: "include" 
         });
 
         const data = await res.json();

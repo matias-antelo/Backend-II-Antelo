@@ -1,4 +1,5 @@
 import productsService from "../services/products.service.js";
+import { generatePaginationLinks } from "../utils/pagination.helper.js";
 
 class ProductsController {
   async getAll(req, res) {
@@ -19,41 +20,9 @@ class ProductsController {
     }
   }
 
-  async getById(req, res) {
-    try {
-      const { id } = req.params;
-      const product = await productsService.getProductById(id);
-
-      if (!product) {
-        return res.status(404).json({
-          status: "error",
-          message: "Producto no encontrado"
-        });
-      }
-
-      res.json({
-        status: "success",
-        product
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: "Error al obtener producto",
-        error: error.message
-      });
-    }
-  }
-
   async create(req, res) {
     try {
       const { title, price, description, stock, category, available } = req.body;
-
-      if (!title || !price || !category) {
-        return res.status(400).json({
-          status: "error",
-          message: "Faltan campos obligatorios"
-        });
-      }
 
       const product = await productsService.createProduct({
         title,
@@ -128,6 +97,26 @@ class ProductsController {
         message: "Error al eliminar producto",
         error: error.message
       });
+    }
+  }
+
+  async renderHome(req, res) {
+    try {
+      const result = await productsService.getProductsFromQuery(req.query);
+      const pages = generatePaginationLinks(result, req.baseUrl);
+
+      res.render("home", {
+        title: "Productos almacenados",
+        products: result.docs,
+        currentQuery: result.query || "",
+        currentLimit: result.limit,
+        currentSort: result.sort || "",
+        pages,
+        currentPage: result.page
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al cargar productos");
     }
   }
 }

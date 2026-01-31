@@ -68,44 +68,17 @@ class CartsController {
     }
   }
 
-  async updateCart(req, res) {
+  async renderCart(req, res) {
     try {
-      const { id } = req.params;
-      const { products } = req.body;
+      const cart = await cartsService.getCartById(req.user.cart);
 
-      const cart = await cartsService.updateCart(id, { products });
-
-      res.json({
-        status: "success",
-        message: "Carrito actualizado correctamente",
-        cart
+      res.render("carts", {
+        title: "Mi carrito",
+        products: cart ? cart.products : []
       });
     } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: "Error al actualizar carrito",
-        error: error.message
-      });
-    }
-  }
-
-  async clearCart(req, res) {
-    try {
-      const user = req.user;
-
-      const cart = await cartsService.clearCart(user.cart);
-
-      res.json({
-        status: "success",
-        message: "Carrito vaciado correctamente",
-        cart
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: "Error al vaciar carrito",
-        error: error.message
-      });
+      console.error(error);
+      res.status(500).send("Error al cargar carrito");
     }
   }
 }

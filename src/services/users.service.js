@@ -1,6 +1,7 @@
 import usersRepository from "../repositories/users.repository.js";
 import cartsRepository from "../repositories/carts.repository.js";
 import { createHash } from "../utils.js";
+import UserDTO from "../dto/user.dto.js";
 
 class UsersService {
 
@@ -42,6 +43,14 @@ class UsersService {
 
   async updateUser(id, data) {
     return await usersRepository.updateUser(id, data);
+  }
+
+  async getCurrentUser(id) {
+    const user = await usersRepository.getUserById(id);
+    if (!user) {
+      throw new Error("Usuario no encontrado");
+    }
+    return UserDTO.from(user);
   }
 }
 

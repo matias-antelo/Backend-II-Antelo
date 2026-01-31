@@ -5,12 +5,12 @@ export default class ProductsDAO {
     return await productsModel.paginate(filter, options);
   }
 
-  async getById(id) {
-    return await productsModel.findById(id);
-  }
-
   async create(product) {
     return await productsModel.create(product);
+  }
+
+  async getById(id) {
+    return await productsModel.findById(id);
   }
 
   async update(id, data) {

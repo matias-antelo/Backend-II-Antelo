@@ -1,22 +1,12 @@
 import usersService from "../services/users.service.js";
-import passport from "passport";
 
 class UsersController {
-  async register(req, res, next) {
+  async register(req, res) {
     try {
-      passport.authenticate("register", (err, user) => {
-        if (!user) {
-          return res.status(400).json({
-            status: "error",
-            message: "Usuario ya existe"
-          });
-        }
-
-        return res.status(201).json({
-          status: "success",
-          message: "Usuario registrado correctamente"
-        });
-      })(req, res, next);
+      res.status(201).json({
+        status: "success",
+        message: "Usuario registrado correctamente"
+      });
     } catch (error) {
       res.status(500).json({
         status: "error",
@@ -28,19 +18,18 @@ class UsersController {
 
   async getCurrentUser(req, res) {
     try {
-      const user = await usersService.getUserById(req.user._id);
-
+      const userDTO = await usersService.getCurrentUser(req.user._id);
       res.json({
         status: "success",
-        user: {
-          _id: user._id,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email,
-          role: user.role
-        }
+        user: userDTO
       });
     } catch (error) {
+      if (error.message === "Usuario no encontrado") {
+        return res.status(404).json({
+          status: "error",
+          message: error.message
+        });
+      }
       res.status(500).json({
         status: "error",
         message: "Error al obtener usuario actual",
@@ -60,7 +49,6 @@ class UsersController {
           message: "Usuario no encontrado"
         });
       }
-
       res.json({
         status: "success",
         user
@@ -71,6 +59,22 @@ class UsersController {
         message: "Error al obtener usuario",
         error: error.message
       });
+    }
+  }
+
+  renderLogin(req, res) {
+    try {
+      res.render('login', { title: "LOGGIN" });
+    } catch (error) {
+      res.status(500).send("Error al cargar página de login");
+    }
+  }
+
+  renderRegistration(req, res) {
+    try {
+      res.render('registration', { title: "Registro" });
+    } catch (error) {
+      res.status(500).send("Error al cargar página de registro");
     }
   }
 }

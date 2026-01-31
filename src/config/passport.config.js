@@ -1,11 +1,9 @@
 import passport from "passport";
 import local from "passport-local";
-import usersModel from "../model/users.model.js";
 import usersService from "../services/users.service.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import { jwtSecret } from "../middlewares/auth.js";
-import cartsModel from "../model/carts.model.js";
 
 const LocalStrategy = local.Strategy;
 const JwtStrategy = jwt.Strategy;
@@ -37,7 +35,7 @@ const initializePassport = () => {
 
     passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
         try {
-            const user = await usersModel.findOne({ email: username })
+            const user = await usersService.getUserByEmail(username);
             if (!user) {
                 return done(null, false);
             }
@@ -56,7 +54,7 @@ const initializePassport = () => {
     },
         async (jwt_payload, done) => {
             try {
-                const user = await usersModel.findById(jwt_payload.id);
+                const user = await usersService.getUserById(jwt_payload.id);
                 if (!user) {
                     return done(null, false);
                 }

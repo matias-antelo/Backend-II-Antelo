@@ -1,8 +1,11 @@
 import { cartsDAO } from "../dao/index.js";
 
 class CartsRepository {
-  async getCartById(id) {
-    return await cartsDAO.getByUserCart(id);
+  async getCartById(id, populate = false) {
+    if (populate) {
+      return await cartsDAO.getById(id);
+    }
+    return await cartsDAO.getByIdWithoutPopulate(id);
   }
 
   async createCart(data) {
@@ -11,10 +14,6 @@ class CartsRepository {
 
   async updateCart(id, data) {
     return await cartsDAO.update(id, data);
-  }
-
-  async getCartByIdAndPopulate(id) {
-    return await cartsDAO.getById(id);
   }
 }
 

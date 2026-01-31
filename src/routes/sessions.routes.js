@@ -1,46 +1,25 @@
 import { Router } from "express";
 import passport from "passport";
-import { generateToken } from "../middlewares/auth.js";
+import sessionsController from "../controllers/sessions.controller.js";
 import usersController from "../controllers/users.controller.js";
 
 const router = Router();
 
 // LOGIN
-router.post(
-  "/login",
+router.post("/login",
   passport.authenticate("login", {
     session: false,
-    failureRedirect: "/api/sessions/login-fail"
+    failWithError: true
   }),
-  (req, res) => {
-    const token = generateToken(req.user);
-
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 1000
-    });
-
-    res.json({
-      status: "success",
-    });
-  }
+  sessionsController.login.bind(sessionsController),
+  sessionsController.loginFail.bind(sessionsController)
 );
 
-// LOGIN FAIL
-router.get("/login-fail", (req, res) => {
-  res.status(401).json({
-    status: "error",
-  });
-});
-
-router.post("/logout", (req, res) => {
-  res.clearCookie("jwt");
-  res.json({ status: "success" });
-});
+// LOGOUT
+router.post("/logout", sessionsController.logout.bind(sessionsController));
 
 // CURRENT - Obtener usuario actual
-router.get(
-  "/current",
+router.get("/current",
   passport.authenticate("jwt", { session: false }),
   usersController.getCurrentUser.bind(usersController)
 );

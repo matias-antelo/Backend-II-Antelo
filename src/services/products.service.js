@@ -3,19 +3,48 @@ import productsRepository from "../repositories/products.repository.js";
 class ProductsService {
   async getProductsFromQuery(queryParams) {
     try {
-      const products = await productsRepository.getProductsFromQuery(queryParams);
-      return products;
+      // Parsear y validar parámetros (lógica de negocio)
+      let { limit, page, sort, query } = queryParams;
+
+      limit = parseInt(limit) || 10;
+      page = parseInt(page) || 1;
+
+      // Validar límites (reglas de negocio)
+      if (limit < 1 || limit > 100) {
+        limit = 10; // Valor por defecto si está fuera de rango
+      }
+      if (page < 1) {
+        page = 1;
+      }
+
+      // Construir filtros según reglas de negocio
+      const filter = {};
+      if (query) {
+        filter.category = query;
+      }
+
+      // Construir opciones de ordenamiento (lógica de negocio)
+      let sortOption = undefined;
+      if (sort === "asc") sortOption = { price: 1 };
+      if (sort === "desc") sortOption = { price: -1 };
+
+      // Llamar al repository con filtros y opciones ya procesadas
+      const result = await productsRepository.getProducts(filter, {
+        limit,
+        page,
+        sort: sortOption
+      });
+
+      // Retornar resultado con metadata de paginación
+      return {
+        ...result,
+        limit,
+        page,
+        sort: sort || undefined,
+        query: query || undefined
+      };
     } catch (error) {
       throw new Error(`Error al obtener productos: ${error.message}`);
-    }
-  }
-
-  async getProductById(id) {
-    try {
-      const product = await productsRepository.getProductById(id);
-      return product;
-    } catch (error) {
-      throw new Error(`Error al obtener producto: ${error.message}`);
     }
   }
 
@@ -67,6 +96,18 @@ class ProductsService {
       return product;
     } catch (error) {
       throw new Error(`Error al eliminar producto: ${error.message}`);
+    }
+  }
+
+  async getProductById(id) {
+    try {
+      const product = await productsRepository.getProductById(id);
+      if (!product) {
+        throw new Error("Producto no encontrado");
+      }
+      return product;
+    } catch (error) {
+      throw new Error(`Error al obtener producto: ${error.message}`);
     }
   }
 }
