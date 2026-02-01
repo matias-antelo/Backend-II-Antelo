@@ -34,4 +34,34 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const deleteButtons = document.querySelectorAll(".btn-delete-product");
+
+  deleteButtons.forEach(button => {
+    button.addEventListener("click", async () => {
+      const productId = button.dataset.productId;
+
+      try {
+        const response = await fetch(
+          `/api/carts/products/${productId}`,
+          {
+            method: "DELETE",
+            credentials: "include"
+          }
+        );
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+        
+          window.location.reload();
+        } else {
+          alert(result.message || "Error al eliminar producto");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error al eliminar producto del carrito");
+      }
+    });
+  });
 });

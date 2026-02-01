@@ -53,8 +53,8 @@ class CartsService {
       // Comparar ObjectIds correctamente
       const productInCartIndex = cartProducts.findIndex(
         (p) => {
-          const existingProductId = p.product instanceof mongoose.Types.ObjectId 
-            ? p.product 
+          const existingProductId = p.product instanceof mongoose.Types.ObjectId
+            ? p.product
             : new mongoose.Types.ObjectId(p.product.toString());
           return existingProductId.equals(productObjectId);
         }
@@ -94,33 +94,32 @@ class CartsService {
 
   async removeProductFromCart(cartId, productId) {
     try {
-      // Obtener el carrito SIN populate para trabajar con ObjectIds
       const cart = await cartsRepository.getCartById(cartId, false);
       if (!cart) {
         throw new Error("Carrito no encontrado");
       }
 
-      // Convertir productId a ObjectId para comparación correcta
       const mongoose = (await import("mongoose")).default;
       const productObjectId = new mongoose.Types.ObjectId(productId);
 
-      // Filtrar el producto comparando ObjectIds correctamente
-      const cartProducts = cart.products || [];
-      const updatedProducts = cartProducts.filter(
-        (p) => {
-          const existingProductId = p.product instanceof mongoose.Types.ObjectId 
-            ? p.product 
-            : new mongoose.Types.ObjectId(p.product.toString());
-          return !existingProductId.equals(productObjectId);
-        }
-      );
+      const updatedProducts = (cart.products || []).filter(p => {
+        const existingProductId = p.product instanceof mongoose.Types.ObjectId
+          ? p.product
+          : new mongoose.Types.ObjectId(p.product.toString());
 
-      const updatedCart = await cartsRepository.updateCart(cartId, {
+        return !existingProductId.equals(productObjectId);
+      });
+
+      await cartsRepository.updateCart(cartId, {
         products: updatedProducts
       });
 
-      // Retornar el carrito populado para mostrar información completa
-      return await cartsRepository.getCartById(cartId, true);
+      // 🔑 devolver carrito limpio
+      const populatedCart = await cartsRepository.getCartById(cartId, true);
+
+      populatedCart.products = populatedCart.products.filter(p => p.product);
+
+      return populatedCart;
     } catch (error) {
       throw new Error(`Error al remover producto del carrito: ${error.message}`);
     }

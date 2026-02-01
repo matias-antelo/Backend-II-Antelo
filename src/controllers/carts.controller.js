@@ -74,7 +74,7 @@ class CartsController {
 
       res.render("carts", {
         title: "Mi carrito",
-        products: cart ? cart.products : []
+        products: (cart?.products || []).filter(p => p.product)
       });
     } catch (error) {
       console.error(error);
