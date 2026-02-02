@@ -16,4 +16,25 @@ export default class UsersDAO {
   update(id, data) {
     return usersModel.findByIdAndUpdate(id, data, { new: true });
   }
+
+  getByResetToken(token) {
+    return usersModel.findOne({ 
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: new Date() }
+    });
+  }
+
+  updateResetToken(id, token, expiresIn) {
+    return usersModel.findByIdAndUpdate(id, {
+      resetPasswordToken: token,
+      resetPasswordExpires: new Date(Date.now() + expiresIn)
+    }, { new: true });
+  }
+
+  clearResetToken(id) {
+    return usersModel.findByIdAndUpdate(id, {
+      resetPasswordToken: null,
+      resetPasswordExpires: null
+    }, { new: true });
+  }
 }

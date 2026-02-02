@@ -16,6 +16,18 @@ class UsersRepository {
   async updateUser(id, data) {
     return await usersDAO.update(id, data);
   }
+
+  async getUserByResetToken(token) {
+    return await usersDAO.getByResetToken(token);
+  }
+
+  async updateResetToken(id, token, expiresIn) {
+    return await usersDAO.updateResetToken(id, token, expiresIn);
+  }
+
+  async clearResetToken(id) {
+    return await usersDAO.clearResetToken(id);
+  }
 }
 
 export default new UsersRepository();
