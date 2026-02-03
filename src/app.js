@@ -50,24 +50,6 @@ app.use('/api/carts', cartsRouter);
 app.use('/api/sessions', viewsRouter);
 app.use('/api/sessions', recoverPasswordRouter);
 
-/*/probando mailer
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    port: 587,
-    auth: {
-        user: process.env.MAILING_ACCOUNT,
-        pass: process.env.MAILING_PASS
-    }
-});
-
-transporter.sendMail({
-    from: process.env.MAILING_ACCOUNT,
-    to: "anteloma@Agro.uba.ar",
-    subject: 'Prueba de envío de correo',
-    html: '<h1>Este es un correo de prueba</h1>'
-})/*/
-
-
 app.listen(process.env.PORT, () => {
     console.log(`Servidor escuchando en puerto ${process.env.PORT}`);
 });
