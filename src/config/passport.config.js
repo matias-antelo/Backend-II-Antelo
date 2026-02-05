@@ -49,7 +49,10 @@ const initializePassport = () => {
     }))
 
     passport.use('jwt', new JwtStrategy({
-        jwtFromRequest: ExtractJwt.fromExtractors([req => req?.cookies?.jwt]),
+        jwtFromRequest: ExtractJwt.fromExtractors([
+            req => req?.cookies?.jwt,
+            ExtractJwt.fromAuthHeaderAsBearerToken()
+        ]),
         secretOrKey: process.env.JWT_SECRET
     },
         async (jwt_payload, done) => {

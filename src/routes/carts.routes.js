@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import cartsController from "../controllers/carts.controller.js";
+import { isUser } from "../middlewares/authorization.js";
 
 const router = Router();
 
@@ -10,9 +11,10 @@ router.get("/:id",
   cartsController.getCartById.bind(cartsController)
 );
 
-// Agregar producto al carrito
+// Agregar producto al carrito (solo usuarios)
 router.post("/products/:pid",
   passport.authenticate("jwt", { session: false }),
+  isUser,
   cartsController.addProductToCart.bind(cartsController)
 );
 
