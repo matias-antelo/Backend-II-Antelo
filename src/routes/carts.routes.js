@@ -24,4 +24,11 @@ router.delete("/products/:pid",
   cartsController.removeProductFromCart.bind(cartsController)
 );
 
+// Comprar carrito (intento de compra: puede ser full o partial)
+router.post("/purchase",
+  passport.authenticate("jwt", { session: false }),
+  isUser,
+  cartsController.purchaseCart.bind(cartsController)
+);
+
 export default router;

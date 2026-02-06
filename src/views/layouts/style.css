@@ -253,3 +253,15 @@ footer {
 .opciones button:hover {
   background-color: #636160;
 }
+
+.finalizar-compra-container {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.btn-finalizar {
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+}

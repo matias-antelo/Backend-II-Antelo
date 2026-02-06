@@ -1,5 +1,7 @@
 import cartsRepository from "../repositories/carts.repository.js";
 import productsService from "./products.service.js";
+import productsRepository from "../repositories/products.repository.js";
+import ticketsRepository from "../repositories/tickets.repository.js";
 
 class CartsService {
   async getCartById(id, populate = true) {
@@ -122,6 +124,64 @@ class CartsService {
       return populatedCart;
     } catch (error) {
       throw new Error(`Error al remover producto del carrito: ${error.message}`);
+    }
+  }
+
+  async purchaseCart(cartId, purchaserEmail) {
+    try {
+      const cart = await this.getCartById(cartId, true);
+      const cartProducts = cart.products || [];
+
+      const purchasedItems = [];
+      const failedItems = [];
+      let amount = 0;
+
+      for (const item of cartProducts) {
+        if (!item.product) continue;
+
+        // item.product es un objeto poblado, así que accede a _id
+        const productId = item.product._id || item.product;
+        const qty = item.quantity;
+        const price = item.product.price || 0;
+
+        // Intentar decrementar stock de forma atómica
+        const updatedProduct = await productsRepository.decrementStockIfAvailable(productId, qty);
+
+        if (updatedProduct) {
+          purchasedItems.push({ product: productId, quantity: qty, price });
+          amount += qty * price;
+        } else {
+          failedItems.push({ productId: productId.toString(), requested: qty, available: item.product.stock || 0 });
+        }
+      }
+
+      let ticket = null;
+      if (purchasedItems.length > 0) {
+        const code = `TICKET-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+        const status = failedItems.length > 0 ? "partial" : "completed";
+
+        ticket = await ticketsRepository.createTicket({
+          code,
+          purchase_datetime: new Date(),
+          amount,
+          purchaser: purchaserEmail,
+          products: purchasedItems,
+          status
+        });
+      }
+
+      // Remover del carrito los items que fueron comprados
+      const purchasedProductIds = purchasedItems.map(p => p.product.toString());
+      const remainingProducts = (cartProducts || []).filter(item => {
+        const pid = item.product && (item.product._id ? item.product._id.toString() : item.product.toString());
+        return !purchasedProductIds.includes(pid);
+      });
+
+      await cartsRepository.updateCart(cartId, { products: remainingProducts });
+
+      return { ticket, failedItems, status: ticket ? ticket.status : "failed" };
+    } catch (error) {
+      throw new Error(`Error al procesar compra: ${error.message}`);
     }
   }
 }

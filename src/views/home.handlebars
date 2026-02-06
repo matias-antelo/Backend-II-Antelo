@@ -2,7 +2,7 @@
   <ul>
     <li><a href="/api/sessions/" id="link-ingreso">Productos</a></li>
     <li><a href="/api/sessions/carts" id="link-incubadora">Carrito</a></li>
-
+    <li><a href="/api/sessions/tickets" id="link-incubadora">Mis Tickets</a></li>
   </ul>
 </nav>
 
@@ -45,12 +45,8 @@
 
     <p><strong>{{this.title}}</p>
     <p><b>Precio:</b> {{this.price}}</p>
+    <p><b>Stock:</b> {{this.stock}}</p>
 
-    {{#if this.available}}
-    <p style="color: green ">Disponible</p>
-    {{else}}
-    <p style="color: red">Sin stock</p>
-    {{/if}}
     <button class="btn-agregar" data-id="{{this._id}}">Agregar al carrito</button>
   </div>
 </div>

@@ -51,7 +51,6 @@ class ProductsController {
     try {
       const { id } = req.params;
       const data = req.body;
-
       const product = await productsService.updateProduct(id, data);
 
       if (!product) {

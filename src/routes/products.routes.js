@@ -21,6 +21,3 @@ router.delete("/:id", passport.authenticate("jwt", { session: false }), isAdmin,
   productsController.delete.bind(productsController));
 
 export default router;
-
-
-// falta probar el actualizar producto

@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <ul>
+    <li><a href="/api/sessions/" id="link-ingreso">Productos</a></li>
+    <li><a href="/api/sessions/carts" id="link-incubadora">Carrito</a></li>
+    <li><a href="/api/sessions/tickets" id="link-incubadora">Mis Tickets</a></li>
+  </ul>
+</nav>
+<main>
+  {{#if tickets}}
+    {{#each tickets}}
+    <div class="grilla">
+      <div class="contenido">
+        <p><strong>Número de compra:</strong> {{this.code}}</p>
+        <p><strong>Total:</strong> ${{this.amount}}</p>
+        <button class="btn-ver-detalle" data-ticket-id="{{this._id}}">Ver detalle</button>
+      </div>
+    </div>
+    {{/each}}
+  {{else}}
+    <p>No tienes tickets de compra.</p>
+  {{/if}}
+</main>
+
+<script src="/ticket.js"></script>

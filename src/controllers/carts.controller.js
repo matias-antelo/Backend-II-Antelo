@@ -30,7 +30,6 @@ class CartsController {
     try {
       const user = req.user;
       const { pid } = req.params;
-
       const cart = await cartsService.addProductToCart(user.cart, pid);
 
       res.json({
@@ -51,7 +50,6 @@ class CartsController {
     try {
       const user = req.user;
       const { pid } = req.params;
-
       const cart = await cartsService.removeProductFromCart(user.cart, pid);
 
       res.json({
@@ -68,6 +66,24 @@ class CartsController {
     }
   }
 
+  async purchaseCart(req, res) {
+    try {
+      const user = req.user;
+      const result = await cartsService.purchaseCart(user.cart, user.email);
+
+      res.json({
+        status: "success",
+        ...result
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "error",
+        message: "Error al procesar compra",
+        error: error.message
+      });
+    }
+  }
+
   async renderCart(req, res) {
     try {
       const cart = await cartsService.getCartById(req.user.cart);
@@ -77,7 +93,6 @@ class CartsController {
         products: (cart?.products || []).filter(p => p.product)
       });
     } catch (error) {
-      console.error(error);
       res.status(500).send("Error al cargar carrito");
     }
   }

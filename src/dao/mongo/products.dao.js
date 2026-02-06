@@ -17,6 +17,14 @@ export default class ProductsDAO {
     return await productsModel.findByIdAndUpdate(id, data, { new: true });
   }
 
+  async decrementStockIfAvailable(id, qty) {
+    return await productsModel.findOneAndUpdate(
+      { _id: id, stock: { $gte: qty } },
+      { $inc: { stock: -qty } },
+      { new: true }
+    );
+  }
+
   async delete(id) {
     return await productsModel.findByIdAndDelete(id);
   }

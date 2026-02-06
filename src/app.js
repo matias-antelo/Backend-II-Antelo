@@ -23,7 +23,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //handlebars    
-app.engine("handlebars", Handlebars.engine({ helpers: { eq: (a, b) => a === b } }));
+app.engine("handlebars", Handlebars.engine({
+  helpers: {
+    eq: (a, b) => a === b,
+    multiply: (a, b) => a * b,
+    formatDate: (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('es-AR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+  }
+}));
 app.set('views', path.join(process.cwd(), '/src/views'))
 app.set('view engine', 'handlebars');
 app.use(express.static("src/public"));
@@ -32,8 +47,8 @@ app.use('/styles', express.static(path.join(process.cwd(), 'src/views/layouts'))
 
 //conexion a la base de datos
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => { console.log("Conectado a BBDD") })
-    .catch(error => { console.error("Error al conectar a la BBDD", error) });
+  .then(() => { console.log("Conectado a BBDD") })
+  .catch(error => { console.error("Error al conectar a la BBDD", error) });
 
 // middleware para parsear cookies
 app.use(cookieParser());
@@ -51,5 +66,5 @@ app.use('/api/sessions', viewsRouter);
 app.use('/api/sessions', recoverPasswordRouter);
 
 app.listen(process.env.PORT, () => {
-    console.log(`Servidor escuchando en puerto ${process.env.PORT}`);
+  console.log(`Servidor escuchando en puerto ${process.env.PORT}`);
 });

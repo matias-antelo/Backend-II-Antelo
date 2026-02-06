@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch(`/api/carts/products/${productId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include" 
+          credentials: "include"
         });
 
         const data = await res.json();
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.status === "success") {
-        
+
           window.location.reload();
         } else {
           alert(result.message || "Error al eliminar producto");
@@ -64,4 +64,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+});
+
+
+document.getElementById('btn-finalizar').addEventListener('click', async function () {
+  try {
+    const response = await fetch('/api/carts/purchase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.json();
+    if (data.status === 'success' || data.ticket) {
+      window.location.href = '/api/sessions/tickets';
+    } else {
+      alert('Error en la compra: ' + (data.failedItems?.length > 0 ? 'Algunos productos sin stock' : 'Error desconocido'));
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al procesar la compra');
+  }
 });

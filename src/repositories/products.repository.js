@@ -3,8 +3,7 @@ import { productsDAO } from "../dao/index.js";
 class ProductsRepository {
   async getProducts(filter = {}, options = {}) {
     const result = await productsDAO.getAll(filter, {
-      ...options,
-      lean: true
+      ...options, lean: true
     });
     return result;
   }
@@ -15,6 +14,10 @@ class ProductsRepository {
 
   async updateProduct(id, data) {
     return await productsDAO.update(id, data);
+  }
+
+  async decrementStockIfAvailable(id, qty) {
+    return await productsDAO.decrementStockIfAvailable(id, qty);
   }
 
   async deleteProduct(id) {

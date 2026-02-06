@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import productsController from "../controllers/products.controller.js";
 import cartsController from "../controllers/carts.controller.js";
+import ticketsController from "../controllers/tickets.controller.js";
 import usersController from "../controllers/users.controller.js";
 import { authJWT, redirectAuth } from "../middlewares/auth.middleware.js";
 
@@ -17,5 +18,11 @@ router.get("/", authJWT, productsController.renderHome.bind(productsController))
 
 //Ruta de carritos
 router.get("/carts", authJWT, cartsController.renderCart.bind(cartsController));
+
+//Ruta de tickets
+router.get("/tickets", authJWT, ticketsController.renderTickets.bind(ticketsController));
+
+//Ruta de detalle de ticket
+router.get("/ticket/:id", authJWT, ticketsController.renderTicketDetail.bind(ticketsController));
 
 export default router;

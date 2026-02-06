@@ -1,0 +1,31 @@
+<nav class="navbar">
+  <ul>
+    <li><a href="/api/sessions/" id="link-ingreso">Productos</a></li>
+    <li><a href="/api/sessions/carts" id="link-incubadora">Carrito</a></li>
+    <li><a href="/api/sessions/tickets" id="link-incubadora">Mis Tickets</a></li>
+  </ul>
+</nav>
+<main>
+  <div class="ticket-detalle">
+    <h2>Detalle de compra - {{ticket.code}}</h2>
+    <p><strong>Fecha:</strong> {{formatDate ticket.purchase_datetime}}</p>
+    
+    <div class="productos-detalle">
+      {{#each ticket.products}}
+      <div class="producto-item">
+        <p><strong>Producto:</strong> {{product.title}}</p>
+        <p><strong>Cantidad:</strong> {{quantity}}</p>
+        <p><strong>Precio unitario:</strong> ${{price}}</p>
+        <p><strong>Subtotal:</strong> ${{multiply quantity price}}</p>
+      </div>
+      <hr class="divisor">
+      {{/each}}
+    </div>
+
+    <div class="resumen-total">
+      <h3><strong>Total de la compra:</strong> ${{ticket.amount}}</h3>
+    </div>
+
+    <button class="btn-volver" onclick="window.location.href='/api/sessions/tickets'">Volver a Mis Tickets</button>
+  </div>
+</main>
