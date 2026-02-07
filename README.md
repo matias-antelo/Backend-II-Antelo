@@ -516,44 +516,69 @@ Se utiliza para generar enlaces dinámicos (por ejemplo en correos electrónicos
 </p>
 <pre>BASE_URL=http://localhost:3000</pre>
 
-
-<h3>👁️ VIEWS </h3>
+<h3>👁️ VIEWS</h3>
 
 <h4>layouts/main.handlebars</h4>
 <p>
-<strong>Layout principal que envuelve todas las páginas de la aplicación.</strong><br>
-Define la estructura HTML base (DOCTYPE, meta tags, title dinámico). En el head carga el CSS desde `/styles/style.css` y la librería SweetAlert2 desde CDN. Incluye un header con el título "CARRITO DE COMPRAS PARA PRODUCTOS" y una barra de navegación con enlaces a "Productos" (`/`) y "Carrito" (`/carts`). El placeholder `{{{body}}}` se reemplaza con el contenido específico de cada página (home.handlebars, carts.handlebars, login.handlebars, registration.handlebars, etc.). Finaliza con un footer con información legal y derechos de autor.
+<strong>Layout principal de la aplicación.</strong><br>
+Define la estructura HTML base (head, carga de CSS global y SweetAlert2). Incluye header con título, render dinámico de vistas mediante <code>{{{body}}}</code> y footer con información legal.
 </p>
 
 <h4>layouts/style.css</h4>
 <p>
-<strong>Hoja de estilos CSS que define la apariencia visual de la aplicación.</strong><br>
-Incluye estilos para el header (fondo, flexbox para layout), barra de navegación (color de fondo, enlaces centrados), formularios, botones y otros elementos de la interfaz para mantener un diseño consistente y responsivo.
+<strong>Estilos globales de la interfaz.</strong><br>
+Define la identidad visual del sistema: header, navbar, grillas de productos, formularios, botones, paginación, login, carrito, footer y diseño responsivo general.
 </p>
 
 <h4>home.handlebars</h4>
 <p>
-<strong>Página principal que muestra el listado de productos con filtrado y paginación.</strong><br>
-Incluye un formulario con tres filtros: <strong>query</strong> (buscar por categoría), <strong>sort</strong> (ordenar por precio asc/desc) y <strong>limit</strong> (cantidad de productos por página: 5, 10 o 20). Itera sobre el array `products` renderizando cada producto en una tarjeta con título, precio, disponibilidad y un botón "Mostrar producto" (clase `btn-agregar`) que redirige a `GET /api/products/:id` para ver detalles. Incluye paginación dinámicamente generada con enlaces que preservan los filtros actuales.
+<strong>Vista principal de productos.</strong><br>
+Muestra el listado de productos con filtros por categoría, orden por precio, límite por página y paginación dinámica. Permite agregar productos al carrito y cerrar sesión.
 </p>
 
 <h4>carts.handlebars</h4>
 <p>
-<strong>Página de gestión del carrito de compras con selector de carritos y lista de productos.</strong><br>
-Contiene un formulario selector de carritos que itera sobre el array `carts` y permite elegir cuál carrito visualizar mediante un dropdown. Incluye un panel para agregar productos directamente: selecciona un producto del dropdown (iterando `productsList`), especifica la cantidad y hace submit con el botón `btn-agregar-producto`. Renderiza cada producto en el carrito en una tarjeta mostrando: título, precio, categoría, descripción, cantidad actual e input para modificarla. Cada producto tiene dos botones: `btn-update` para actualizar la cantidad y `btn-delete` para eliminar del carrito. Al final incluye un botón `btn-delete-all` para vaciar completamente el carrito.
+<strong>Vista de carrito de compras.</strong><br>
+Renderiza los productos del carrito con información detallada y permite eliminar productos y finalizar la compra mediante el botón <code>Finalizar compra</code>.
 </p>
 
 <h4>login.handlebars</h4>
 <p>
-<strong>Página de inicio de sesión para usuarios.</strong><br>
-Muestra un logo, un formulario con campos para email y contraseña, botones para "Iniciar Sesión" y "Registrarse". Carga el script `Login.js` para manejar el envío del formulario y la autenticación.
+<strong>Vista de inicio de sesión.</strong><br>
+Formulario de autenticación por email y contraseña, con acceso a registro de usuario y recuperación de contraseña.
 </p>
 
 <h4>registration.handlebars</h4>
 <p>
-<strong>Página de registro de nuevos usuarios.</strong><br>
-Contiene un formulario con campos para nombre, apellido, email, edad y contraseña, y un botón para "Registrarse". Carga el script `register.js` para procesar el registro.
-</p><br>
+<strong>Vista de registro de usuarios.</strong><br>
+Formulario para creación de cuentas nuevas con datos personales y credenciales.
+</p>
+
+<h4>recoverPassword.handlebars</h4>
+<p>
+<strong>Vista de recuperación de contraseña.</strong><br>
+Formulario para solicitar restablecimiento de contraseña mediante envío de email con token de seguridad.
+</p>
+
+<h4>resetPassword.handlebars</h4>
+<p>
+<strong>Vista de restablecimiento de contraseña.</strong><br>
+Permite definir una nueva contraseña mediante un token válido generado en el proceso de recuperación.
+</p>
+
+<h4>ticket.handlebars</h4>
+<p>
+<strong>Vista de historial de compras.</strong><br>
+Lista los tickets de compra del usuario autenticado con número de compra, total y acceso al detalle.
+</p>
+
+<h4>ticketDetalle.handlebars</h4>
+<p>
+<strong>Vista de detalle de ticket.</strong><br>
+Muestra el detalle completo de una compra: productos, cantidades, precios unitarios, subtotales y total final.
+</p> 
+<br>
+
 
 ---
 
