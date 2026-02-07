@@ -6,20 +6,16 @@ import UserDTO from "../dto/user.dto.js";
 class UsersService {
 
   async registerUser(userData) {
-    // 1️⃣ Validar si el usuario ya existe
     const existingUser = await usersRepository.getUserByEmail(userData.email);
     if (existingUser) {
       throw new Error("El usuario ya existe");
     }
-
-    // 2️⃣ Crear carrito para el usuario con cartNumber único
-    const cartNumber = Date.now(); // Generar cartNumber único basado en timestamp
+    const cartNumber = Date.now();
     const cart = await cartsRepository.createCart({
       cartNumber: cartNumber,
       products: []
     });
 
-    // 3️⃣ Crear usuario
     const newUser = {
       first_name: userData.first_name,
       last_name: userData.last_name,

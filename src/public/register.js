@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Validar campos obligatorios
     const firstName = document.getElementById("first_name")?.value?.trim();
     const lastName = document.getElementById("last_name")?.value?.trim();
     const email = document.getElementById("email")?.value?.trim();
